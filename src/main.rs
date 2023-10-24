@@ -1,5 +1,10 @@
+pub mod scratchcard {
+    pub fn generate() {
+        println!("Generating a new scratchcard");
+    }
+}
+
 use rand::Rng;
-use std::cmp::Ordering;
 use std::io;
 
 fn main() {
@@ -25,13 +30,6 @@ fn main() {
 
         println!("You guessed: {guess}");
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too Small!"),
-            Ordering::Greater => println!("Too Big!"),
-            Ordering::Equal => {
-                println!("You Won!");
-                break;
-            }
-        }
+        scratchcard::generate();
     }
 }
