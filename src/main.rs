@@ -1,8 +1,12 @@
 use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
+use slotmachine::test;
 
 fn main() {
+
+    slotmachine::test();
+
     println!("Guess the number!");
 
     let secret_number = rand::thread_rng().gen_range(1..=100);
