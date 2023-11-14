@@ -1,41 +1,32 @@
-use rand::Rng;
-use std::cmp::Ordering;
 use std::io;
-use slotmachine::test;
+use slotmachine::spin;
 
 fn main() {
 
-    slotmachine::test();
-
-    println!("Guess the number!");
-
-    let secret_number = rand::thread_rng().gen_range(1..=100);
-
-    //println!("The secret number is : {secret_number}");
+    println!("Welcome to our Crypto Slot Machine!!!");
 
     loop {
-        println!("Please input your guess.");
+        println!("Type what you would like to do next? [1] for Spin, [2] to stop, [3] to cash out, [4] to deposit");
 
-        let mut guess = String::new();
+        let mut selection = String::new();
 
         io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+        .read_line(&mut selection)
+        .expect("Please input a single number");
 
-        let guess: u32 = match guess.trim().parse() {
+        let selection: u32 = match selection.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };
 
-        println!("You guessed: {guess}");
+        println!("You chose: {selection}");
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too Small!"),
-            Ordering::Greater => println!("Too Big!"),
-            Ordering::Equal => {
-                println!("You Won!");
-                break;
-            }
+        match selection {
+            1 => slotmachine::spin(),
+            3 => { println!("You selected to cash out"); },
+            4 => { println!("You selected to deposit"); },
+            2 => { println!("Good bye and see you soon!"); break; },
+            _ => { println!("Pick a number between 1 and 4"); }
         }
     }
 }
