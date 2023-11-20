@@ -21,7 +21,7 @@ const PAYOUT_MULTIPLIER: [i32; 6] = [1199, 0200, 0100, 0090, 0040, 0040];
 const REEL: [char; 64] = ['J', '7', '3', '2', '1', 'C', '2', '1', 'C', '7', '3', '1', 'J', '2', '1', '3', '1', 'C', '7', '2', '1', '1', 'J', '3', '2', '1', 'C', '7', '1', '3', '2', '1', 'C', 'J', '7', '2', '1', '3', '1', '1', 'C', '7', '2', '1', 'J', '3', '1', '2', '1', 'C', '7', '3', '1', '2', '1', 'J', '7', '3', '1', 'C', '2', '1', '1', '1'];
 const REEL_SIZE: usize = REEL.len() - 1;
 
-pub fn spin() {
+pub fn spin() ->  (i32, String) {
     let reel1 = rand::thread_rng().gen_range(0..=REEL_SIZE);
     let reel2 = rand::thread_rng().gen_range(0..=REEL_SIZE);
     let reel3 = rand::thread_rng().gen_range(0..=REEL_SIZE);
@@ -30,13 +30,14 @@ pub fn spin() {
 
     // calculate the payout
     match spinout.as_str() {
-        _ if spinout == PAYOUT_WIN_SCENARIOS[0] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[0], PAYOUT_MULTIPLIER[0]),
-        _ if spinout == PAYOUT_WIN_SCENARIOS[1] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[1], PAYOUT_MULTIPLIER[1]),
-        _ if spinout == PAYOUT_WIN_SCENARIOS[2] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[2], PAYOUT_MULTIPLIER[2]),
-        _ if spinout == PAYOUT_WIN_SCENARIOS[3] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[3], PAYOUT_MULTIPLIER[3]),
-        _ if spinout == PAYOUT_WIN_SCENARIOS[4] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[4], PAYOUT_MULTIPLIER[4]),
-        _ if spinout == PAYOUT_WIN_SCENARIOS[5] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[5], PAYOUT_MULTIPLIER[5]),
-        _ => println!("You lost"),
+    //    _ if spinout == PAYOUT_WIN_SCENARIOS[0] => println!("You won the {}!!! {}", PAYOUT_WIN_SCENARIOS[0], PAYOUT_MULTIPLIER[0]),
+        _ if spinout == PAYOUT_WIN_SCENARIOS[0] => return (PAYOUT_MULTIPLIER[0], PAYOUT_WIN_SCENARIOS[0].to_string()),
+        _ if spinout == PAYOUT_WIN_SCENARIOS[1] => return (PAYOUT_MULTIPLIER[1], PAYOUT_WIN_SCENARIOS[1].to_string()),
+        _ if spinout == PAYOUT_WIN_SCENARIOS[2] => return (PAYOUT_MULTIPLIER[2], PAYOUT_WIN_SCENARIOS[2].to_string()),
+        _ if spinout == PAYOUT_WIN_SCENARIOS[3] => return (PAYOUT_MULTIPLIER[3], PAYOUT_WIN_SCENARIOS[3].to_string()),
+        _ if spinout == PAYOUT_WIN_SCENARIOS[4] => return (PAYOUT_MULTIPLIER[4], PAYOUT_WIN_SCENARIOS[4].to_string()),
+        _ if spinout == PAYOUT_WIN_SCENARIOS[5] => return (PAYOUT_MULTIPLIER[5], PAYOUT_WIN_SCENARIOS[5].to_string()),
+        _ => return (0, spinout),
     }
 }
 

@@ -33,31 +33,6 @@ async fn main() {
     .build()
     .dispatch()
     .await;
-
-    loop {
-        println!("Type what you would like to do next? [1] for Spin, [2] to stop, [3] to cash out, [4] to deposit");
-
-        let mut selection = String::new();
-
-        io::stdin()
-        .read_line(&mut selection)
-        .expect("Please input a single number");
-
-        let selection: u32 = match selection.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-
-        println!("You chose: {selection}");
-
-        match selection {
-            1 => { println!("testing selection 1"); slotmachine::spin(); let t1 = test(); let t2 = test(); tokio::join!(t1,t2); },
-            3 => { println!("You selected to cash out"); },
-            4 => { println!("You selected to deposit"); },
-            2 => { println!("Good bye and see you soon!"); break; },
-            _ => { println!("Pick a number between 1 and 4"); }
-        }
-    }
 }
 
 async fn test() { println!("First Task"); }
@@ -65,17 +40,49 @@ async fn test() { println!("First Task"); }
 async fn telegram(bot: Bot, dialogue: MyDialogue, msg: Message) -> HandlerResult {
     //pretty_env_logger::init();
     //log::info!("Starting throw dice bot...");
-    println!("starting the telegram function");
-    bot.send_message(msg.chat.id, "What is your selection?").await?;
+    bot.send_message(msg.chat.id, "Type what you would like to do next? [spin] for Spin, [deposit] for instruction how to deposit, [withdraw] for instructions to cash out?").await?;
     match msg.text() {
-        Some("1") => {
-            println!("testing telegram bot {}", msg.chat.id.to_string());
+        Some("spin") => {
+            let username = msg.chat.username().unwrap();
+            //println!("testing telegram bot {}", username);
             
-            dialogue.update(State::receive_selection { rec_selection: "1".into() });
-            println!("finishing telegram function with");
+            dialogue.update(State::receive_selection { rec_selection: "spin".into() });
+            println!("Let's spin one more time"); 
+            let newspin = slotmachine::spin();
+            let mut output = String::new();
+            match newspin.1.as_str() {
+                "JJJ" => {
+                    output = format!("{} - CONGRATULATIONS {}, you won {}X your initial bet!!!", newspin.1, username, newspin.0);
+                },
+                "777" => { 
+                    output = format!("{} - CONGRATULATIONS {}, you won {}X your initial bet!!!", newspin.1, username, newspin.0);
+                },
+                "333" => {
+                    output = format!("{} - CONGRATULATIONS {}, you won {}X your initial bet!!!", newspin.1, username, newspin.0);
+                },
+                "222" => {
+                    output = format!("{} - CONGRATULATIONS {}, you won {}X your initial bet!!!", newspin.1, username, newspin.0);
+                },
+                "111" => {
+                    output = format!("{} - CONGRATULATIONS {}, you won {}X your initial bet!!!", newspin.1, username, newspin.0);
+                },
+                "CCC" => {
+                    output = format!("{} - CONGRATULATIONS {}, you won {}X your initial bet!!!", newspin.1, username, newspin.0);
+                },
+                _ => {
+                    output = format!("{} - {}, unfortunately you did not win!", newspin.1, username);
+                }
+            }
+            
+            println!("{}", output);
+            bot.send_message(msg.chat.id, output).await?;
+            //let t1 = test(); 
+            //let t2 = test(); 
+            //tokio::join!(t1,t2);
         },
-        Some("2") => { println!("you selected option 2"); },
-        Some(text) => { println!("did not match anyting specific"); },
+        Some("deposit") => { println!("In order to spin, you have to transfer more ETH into your wallet"); },
+        Some("withdraw") => { println!("In order to withdraw, follow these instructions XXX") },
+        Some(text) => { println!("did not match anyting of the available choices"); },
         None => {
             println!("I do not think this is working");
             bot.send_message(msg.chat.id, "Send me plain text").await?;
